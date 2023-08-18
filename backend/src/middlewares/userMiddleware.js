@@ -9,6 +9,22 @@ const validateBody = (req, res, next) => {
         response.status(400).json({message: 'Campo CPF nao pode ser vazio'});
     }
 
+    if (body.email == undefined){
+        response.status(400).json({message: 'Campo EMAIL é obrigatório'});
+    }
+
+    if (body.email == ''){
+        response.status(400).json({message: 'Campo EMAIL nao pode ser vazio'});
+    }
+
+    if (body.senha == undefined){
+        response.status(400).json({message: 'Campo senha é obrigatório'});
+    }
+
+    if (body.senha == ''){
+        response.status(400).json({message: 'Campo senha nao pode ser vazio'});
+    }
+
     next();
 };
 

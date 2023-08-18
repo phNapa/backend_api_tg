@@ -13,14 +13,20 @@ const getUserId = async (id) => {
 const createNewUser = async (user) => {
     const {email, senha, cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor} = user;
 
-    const query = 'INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const checkIfExists = await connection.execute('SELECT * FROM user_credentials WHERE email = ?',[email])
+
+    if (checkIfExists[0] != ''){
+        return {message: "user already exists"}
+    }else{
+        const query = 'INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
   
-    const [createdUser] = await connection.execute(query,[cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null']);
+        const [createdUser] = await connection.execute(query,[cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null']);
 
-    const queryCredentials = 'INSERT INTO user_credentials (email, senha, userID) VALUES (?, ?, ?)';
-    const [createdUserCredentials] = await connection.execute(queryCredentials,[email, senha, createdUser.insertId]);
+        const queryCredentials = 'INSERT INTO user_credentials (email, senha, userID) VALUES (?, ?, ?)';
+        const [createdUserCredentials] = await connection.execute(queryCredentials,[email, senha, createdUser.insertId]);
 
-    return {insertId: createdUser.insertId, insertIdCredentials: createdUserCredentials.insertId};
+        return {insertId: createdUser.insertId, insertIdCredentials: createdUserCredentials.insertId};
+    }
 };
 
 const deleteUser = async (id) => {
