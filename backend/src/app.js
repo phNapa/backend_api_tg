@@ -1,8 +1,13 @@
 const express = require('express');
-const router = require('./routes/userRouter');
+const userRoutes = require('./routes/userRouter');
+const alunoRoutes = require('./routes/alunoRouter');
 
 const app = express();
 
 app.use(express.json());
-app.use(router);
+
+//routes
+app.use(userRoutes);
+app.use(alunoRoutes);
+
 module.exports = app;
