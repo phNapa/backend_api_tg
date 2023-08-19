@@ -14,6 +14,6 @@ router.post('/users', userMiddleware.validateBody, userController.createNewUser)
 
 router.delete('/users/:id', userController.deleteUser);
 
-router.put('/users/:id', userMiddleware.validateBody, userController.updateUser);
+router.put('/users/:id', userController.updateUser);
 
 module.exports = router;

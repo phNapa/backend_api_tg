@@ -6,18 +6,24 @@ const getAll = async () => {
 };
 
 const getAlunoId = async (id) => {
-    const aluno = await connection.execute('SELECT u.name, a.* FROM aluno a left join usuario u on u.userID = a.userID WHERE u.userID = ?',[id]);
+    const aluno = await connection.execute('SELECT u.name, a.* FROM aluno a left join usuario u on u.userID = a.userID WHERE a.alunoID = ?',[id]);
     return aluno;
 };
 
 const createNewAluno = async (aluno) => {
     const {altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID} = aluno;
 
-    const query = 'INSERT INTO aluno (altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const checkIsProfessor = await connection.execute('SELECT isProfessor FROM usuario WHERE userID = ?',[userID])
 
-    const [createdAluno] = await connection.execute(query,[altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID]);
+    if (checkIsProfessor[0] == '1'){
+        return {message: "user is professor"}
+    }else{
+        const query = 'INSERT INTO aluno (altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-    return {insertId: createdAluno.insertId};
+        const [createdAluno] = await connection.execute(query,[altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID]);
+
+        return {insertId: createdAluno.insertId};
+    }
 };
 
 const deleteAluno = async (id) => {
