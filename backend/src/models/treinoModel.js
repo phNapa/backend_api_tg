@@ -13,7 +13,7 @@ const getTreinoId = async (id) => {
 const createNewTreino = async (treino) => {
     const {cadencia, descanso, exercicios, repeticoes, series} = treino;
 
-    const query = 'INSERT INTO Treino (cadencia, descanso, exercicios, repeticoes, series) VALUES (?, ?, ?, ?, ?)';
+    const query = 'INSERT INTO treino (cadencia, descanso, exercicios, repeticoes, series) VALUES (?, ?, ?, ?, ?)';
 
     const [createdTreino] = await connection.execute(query,[cadencia, descanso, exercicios, repeticoes, series]);
 
@@ -30,7 +30,7 @@ const deleteTreino = async (id) => {
 const updateTreino = async (id, treino) => {
     const {cadencia, descanso, exercicios, repeticoes, series} = treino;
     
-    const query = 'UPDATE Treino SET cadencia = ?, descanso = ?, exercicios = ?, repeticoes = ?, series = ? WHERE treinoID = ?';
+    const query = 'UPDATE treino SET cadencia = ?, descanso = ?, exercicios = ?, repeticoes = ?, series = ? WHERE treinoID = ?';
 
     const updatedTreino = await connection.execute(query,[cadencia, descanso, exercicios, repeticoes, series, id]);
 
