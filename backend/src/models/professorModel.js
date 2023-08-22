@@ -35,12 +35,12 @@ const createNewProf = async (prof) => {
             return { error: "User is not a professor" };
         }
 
-        const checkIfExistsProfessorQuery = 'SELECT * FROM professor WHERE userID = ?';
-        const [userAlreadyProfessor] = await connection.execute(checkIfExistsProfessorQuery, [userID]);
+        // const checkIfExistsProfessorQuery = 'SELECT * FROM professor WHERE userID = ?';
+        // const [userAlreadyProfessor] = await connection.execute(checkIfExistsProfessorQuery, [userID]);
 
-        if (userAlreadyProfessor.length === 0 || userAlreadyProfessor[0].isProfessor !== 1) {
-            return { error: "User already a professor" };
-        }
+        // if (userAlreadyProfessor.length === 0 || userAlreadyProfessor[0].isProfessor !== 1) {
+        //     return { error: "User already a professor" };
+        // }
 
         const insertQuery = `
             INSERT INTO professor (certificacoes, dispoHorario, especialidade, experiencia, userID)
