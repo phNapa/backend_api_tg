@@ -11,7 +11,7 @@ router.get('/aluno',jwtMiddleware.verifyJWT, alunoController.getAll);
 
 router.get('/aluno/:id', jwtMiddleware.verifyJWT, alunoController.getAlunoId);
 
-router.post('/aluno', jwtMiddleware.verifyJWT, alunoController.createNewAluno);
+router.post('/aluno', jwtMiddleware.verifyJWT, alunoMiddleware.validateBody, alunoController.createNewAluno);
 
 router.delete('/aluno/:id', jwtMiddleware.verifyJWT, alunoController.deleteAluno);
 

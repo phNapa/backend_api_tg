@@ -25,9 +25,7 @@ const authenticate = async (req, res) => {
     if (user[0][0] == null){
         return res.status(401).json({ error: "Email incorreto" });
     }
-console.log(user)
     var validPassword = bcrypt.compareSync(authenticateParams['senha'], user[0][0]['senha']);
-    console.log(validPassword)
 
     if (validPassword == false) {
         return res.status(401).json({ error: "Senha incorreta!" });

@@ -13,7 +13,7 @@ router.get('/users/:id', jwtMiddleware.verifyJWT, userController.getUserId);
 
 router.post('/auth/login', userController.authenticate);
 
-router.post('/users', jwtMiddleware.verifyJWT, userMiddleware.validateBody, userController.createNewUser);
+router.post('/users', userMiddleware.validateBody, userController.createNewUser);
 
 router.delete('/users/:id', jwtMiddleware.verifyJWT, userController.deleteUser);
 

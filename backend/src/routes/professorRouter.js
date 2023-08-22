@@ -10,7 +10,7 @@ router.get('/prof', jwtMiddleware.verifyJWT, professorController.getAll);
 
 router.get('/prof/:id', jwtMiddleware.verifyJWT, professorController.getProfId);
 
-router.post('/prof', jwtMiddleware.verifyJWT, professorController.createNewProf);
+router.post('/prof', jwtMiddleware.verifyJWT, professorMiddleware.validateBody, professorController.createNewProf);
 
 router.delete('/prof/:id', jwtMiddleware.verifyJWT, professorController.deleteProf);
 

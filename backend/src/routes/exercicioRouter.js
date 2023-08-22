@@ -11,7 +11,7 @@ router.get('/exercicio', jwtMiddleware.verifyJWT, exercicioController.getAll);
 
 router.get('/exercicio/:id', jwtMiddleware.verifyJWT, exercicioController.getExercicioId);
 
-router.post('/exercicio', jwtMiddleware.verifyJWT, exercicioController.createNewExercicio);
+router.post('/exercicio', jwtMiddleware.verifyJWT, exercicioMiddleware.validateBody, exercicioController.createNewExercicio);
 
 router.delete('/exercicio/:id', jwtMiddleware.verifyJWT, exercicioController.deleteExercicio);
 

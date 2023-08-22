@@ -10,7 +10,7 @@ router.get('/treino',jwtMiddleware.verifyJWT, treinoController.getAll);
 
 router.get('/treino/:id', jwtMiddleware.verifyJWT, treinoController.getTreinoId);
 
-router.post('/treino', jwtMiddleware.verifyJWT, treinoController.createNewTreino);
+router.post('/treino', jwtMiddleware.verifyJWT,treinoMiddleware.validateBody, treinoController.createNewTreino);
 
 router.delete('/treino/:id', jwtMiddleware.verifyJWT, treinoController.deleteTreino);
 
