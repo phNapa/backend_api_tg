@@ -5,15 +5,16 @@ const exercicioController = require('../controllers/exercicioController');
 
 const exercicioMiddleware = require('../middlewares/exercicioMiddleware');
 
+const jwtMiddleware = require('../middlewares/jwtMiddleware');
 
-router.get('/exercicio', exercicioController.getAll);
+router.get('/exercicio', jwtMiddleware.verifyJWT, exercicioController.getAll);
 
-router.get('/exercicio/:id', exercicioController.getExercicioId);
+router.get('/exercicio/:id', jwtMiddleware.verifyJWT, exercicioController.getExercicioId);
 
-router.post('/exercicio', exercicioController.createNewExercicio);
+router.post('/exercicio', jwtMiddleware.verifyJWT, exercicioController.createNewExercicio);
 
-router.delete('/exercicio/:id', exercicioController.deleteExercicio);
+router.delete('/exercicio/:id', jwtMiddleware.verifyJWT, exercicioController.deleteExercicio);
 
-router.put('/exercicio/:id', exercicioController.updateExercicio);
+router.put('/exercicio/:id', jwtMiddleware.verifyJWT, exercicioController.updateExercicio);
 
 module.exports = router;

@@ -4,16 +4,16 @@ const router = express.Router();
 const professorController = require('../controllers/professorController');
 
 const professorMiddleware = require('../middlewares/professorMiddleware');
+const jwtMiddleware = require('../middlewares/jwtMiddleware');
 
+router.get('/prof', jwtMiddleware.verifyJWT, professorController.getAll);
 
-router.get('/prof', professorController.getAll);
+router.get('/prof/:id', jwtMiddleware.verifyJWT, professorController.getProfId);
 
-router.get('/prof/:id', professorController.getProfId);
+router.post('/prof', jwtMiddleware.verifyJWT, professorController.createNewProf);
 
-router.post('/prof', professorController.createNewProf);
+router.delete('/prof/:id', jwtMiddleware.verifyJWT, professorController.deleteProf);
 
-router.delete('/prof/:id', professorController.deleteProf);
-
-router.put('/prof/:id', professorController.updateProf);
+router.put('/prof/:id', jwtMiddleware.verifyJWT, professorController.updateProf);
 
 module.exports = router;

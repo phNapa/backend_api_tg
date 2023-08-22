@@ -4,16 +4,16 @@ const router = express.Router();
 const treinoController = require('../controllers/treinoController');
 
 const treinoMiddleware = require('../middlewares/treinoMiddleware');
+const jwtMiddleware = require('../middlewares/jwtMiddleware');
 
+router.get('/treino',jwtMiddleware.verifyJWT, treinoController.getAll);
 
-router.get('/treino', treinoController.getAll);
+router.get('/treino/:id', jwtMiddleware.verifyJWT, treinoController.getTreinoId);
 
-router.get('/treino/:id', treinoController.getTreinoId);
+router.post('/treino', jwtMiddleware.verifyJWT, treinoController.createNewTreino);
 
-router.post('/treino', treinoController.createNewTreino);
+router.delete('/treino/:id', jwtMiddleware.verifyJWT, treinoController.deleteTreino);
 
-router.delete('/treino/:id', treinoController.deleteTreino);
-
-router.put('/treino/:id', treinoController.updateTreino);
+router.put('/treino/:id', jwtMiddleware.verifyJWT, treinoController.updateTreino);
 
 module.exports = router;
