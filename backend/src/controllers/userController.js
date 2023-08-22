@@ -1,6 +1,8 @@
 const connection = require('../models/connection');
-const { connect } = require('../models/connection');
 const userModel = require('../models/userModel');
+const bcrypt = require('bcrypt');
+const jsonwebtoken = require('jsonwebtoken');
+require('dotenv').config();
 
 const getAll = async (req, res) => {
 
@@ -14,6 +16,40 @@ const getUserId = async (req, res) => {
     const user = await userModel.getUserId(id);
     return res.status(200).json(user[0]);
 };
+
+const authenticate = async (req, res) => {
+    const authenticateParams = await userModel.authenticate(req.body);
+
+    const user = await connection.execute('SELECT * FROM user_credentials WHERE email = ?',[authenticateParams['email']])
+
+    if (user[0][0] == null){
+        return res.status(401).json({ error: "Email incorreto" });
+    }
+console.log(user)
+    var validPassword = bcrypt.compareSync(authenticateParams['senha'], user[0][0]['senha']);
+    console.log(validPassword)
+
+    if (validPassword == false) {
+        return res.status(401).json({ error: "Senha incorreta!" });
+    }
+
+    const token = jsonwebtoken.sign(
+        {
+          userID: user[0][0]['userID'],
+          email: authenticateParams['email']
+        },
+        process.env.ACCESS_TOKEN_SECRET.toString(),
+        {
+          expiresIn: "8h",
+        }
+      );
+    
+      const horarioAtual = new Date();
+    
+      const expiracaoToken = new Date(horarioAtual.getTime() + 8 * 60 * 60 * 1000);
+
+    return res.status(200).json(token, authenticateParams, expiracaoToken);
+}
 
 const createNewUser = async (req, res) => {
     const createdUser = await userModel.createNewUser(req.body);
@@ -41,4 +77,5 @@ module.exports = {
     createNewUser,
     deleteUser,
     updateUser,
+    authenticate,
 };

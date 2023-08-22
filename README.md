@@ -26,7 +26,9 @@ Instale nodeJS na sua máquina e as seguintes depedências
   npm install express\
   npm install mysql2 \
   npm install nodemon\
-  npm install dotenv
+  npm install dotenv \
+  npm install bcrypt \
+  npm install jsonwebtoken
 ```
     
 ## Deploy

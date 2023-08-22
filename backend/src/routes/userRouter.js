@@ -10,6 +10,8 @@ router.get('/users', userController.getAll);
 
 router.get('/users/:id', userController.getUserId);
 
+router.post('/auth/login', userController.authenticate);
+
 router.post('/users', userMiddleware.validateBody, userController.createNewUser);
 
 router.delete('/users/:id', userController.deleteUser);

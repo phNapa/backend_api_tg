@@ -1,4 +1,6 @@
 const connection = require('./connection');
+const bcrypt = require('bcrypt');
+const jsonwebtoken = require('jsonwebtoken');
 
 const getAll = async () => {
     const [users] = await connection.execute('SELECT * FROM usuario');
@@ -9,6 +11,19 @@ const getUserId = async (id) => {
     const user = await connection.execute('SELECT * FROM usuario WHERE userID = ?',[id]);
     return user;
 };
+
+const authenticate = async (userCredentials) => {
+    const {email, senha} = userCredentials;
+
+    
+    const getUserCredentials = await connection.execute('SELECT * FROM user_credentials WHERE email = ?',[email])
+
+    if (getUserCredentials[0][0] != ''){
+        return userCredentials;
+    }
+    return userCredentials;
+
+}
 
 const createNewUser = async (user) => {
     const {email, senha, cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor} = user;
@@ -23,7 +38,10 @@ const createNewUser = async (user) => {
         const [createdUser] = await connection.execute(query,[cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null']);
 
         const queryCredentials = 'INSERT INTO user_credentials (email, senha, userID) VALUES (?, ?, ?)';
-        const [createdUserCredentials] = await connection.execute(queryCredentials,[email, senha, createdUser.insertId]);
+
+        
+
+        const [createdUserCredentials] = await connection.execute(queryCredentials,[email, bcrypt.hashSync(senha,10), createdUser.insertId]);
 
         return {insertId: createdUser.insertId, insertIdCredentials: createdUserCredentials.insertId};
     }
@@ -51,4 +69,5 @@ module.exports = {
     createNewUser,
     deleteUser,
     updateUser,
+    authenticate,
 };
