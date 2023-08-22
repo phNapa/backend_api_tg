@@ -3,14 +3,31 @@ const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 
 const getAll = async () => {
-    const [users] = await connection.execute('SELECT * FROM usuario');
-    return users;
+    try {
+        const query = 'SELECT * FROM usuario';
+        const [users] = await connection.execute(query);
+        return users;
+    } catch (error) {
+        throw new Error(`Failed to retrieve users: ${error.message}`);
+    }
 };
 
+
 const getUserId = async (id) => {
-    const user = await connection.execute('SELECT * FROM usuario WHERE userID = ?',[id]);
-    return user;
+    try {
+        const query = 'SELECT * FROM usuario WHERE userID = ?';
+        const [user] = await connection.execute(query, [id]);
+
+        if (user.length === 0) {
+            throw new Error('User not found');
+        }
+
+        return user[0]; // Return the first user (assuming ID is unique)
+    } catch (error) {
+        throw new Error(`Failed to retrieve user: ${error.message}`);
+    }
 };
+
 
 const authenticate = async (userCredentials) => {
     const {email, senha} = userCredentials;
@@ -26,26 +43,35 @@ const authenticate = async (userCredentials) => {
 }
 
 const createNewUser = async (user) => {
-    const {email, senha, cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor} = user;
+    try {
+        const { email, senha, cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor } = user;
 
-    const checkIfExists = await connection.execute('SELECT * FROM user_credentials WHERE email = ?',[email])
+        const checkIfExistsQuery = 'SELECT * FROM user_credentials WHERE email = ?';
+        const [existingUser] = await connection.execute(checkIfExistsQuery, [email]);
 
-    if (checkIfExists[0] != ''){
-        return {message: "user already exists"}
-    }else{
-        const query = 'INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  
-        const [createdUser] = await connection.execute(query,[cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null']);
+        if (existingUser.length > 0) {
+            return { error: "User already exists" };
+        }
 
-        const queryCredentials = 'INSERT INTO user_credentials (email, senha, userID) VALUES (?, ?, ?)';
+        const insertUserQuery = `
+            INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        const [createdUser] = await connection.execute(insertUserQuery, [cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null']);
 
-        
+        const insertUserCredentialsQuery = 'INSERT INTO user_credentials (email, senha, userID) VALUES (?, ?, ?)';
+        const hashedPassword = await bcrypt.hash(senha, 10);
+        const [createdUserCredentials] = await connection.execute(insertUserCredentialsQuery, [email, hashedPassword, createdUser.insertId]);
 
-        const [createdUserCredentials] = await connection.execute(queryCredentials,[email, bcrypt.hashSync(senha,10), createdUser.insertId]);
-
-        return {insertId: createdUser.insertId, insertIdCredentials: createdUserCredentials.insertId};
+        return {
+            insertId: createdUser.insertId,
+            insertIdCredentials: createdUserCredentials.insertId
+        };
+    } catch (error) {
+        return { error: `Failed to create professor: ${error.message}` };
     }
 };
+
 
 const deleteUser = async (id) => {
     const removedUser = await connection.execute('DELETE FROM usuario WHERE userID = ?',[id]);

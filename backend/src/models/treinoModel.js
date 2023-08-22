@@ -1,25 +1,42 @@
 const connection = require('./connection');
 
 const getAll = async () => {
-    const [treino] = await connection.execute('SELECT* FROM treino');
-    return treino;
+    try {
+        const query = 'SELECT * FROM treino';
+        const [treinos] = await connection.execute(query);
+        return treinos;
+    } catch (error) {
+        throw new Error(`Failed to retrieve treinos: ${error.message}`);
+    }
 };
 
+
 const getTreinoId = async (id) => {
-    const treino = await connection.execute('SELECT * FROM treino where treinoID = ?',[id]);
-    return treino;
+    try {
+        const treino = await connection.execute('SELECT * FROM treino where treinoID = ?',[id]);
+        return treino;
+    } catch (error) {
+        throw new Error(`Failed to retrieve treino: ${error.message}`);
+    }
 };
 
 const createNewTreino = async (treino) => {
-    const {cadencia, descanso, exercicios, repeticoes, series} = treino;
+    try {
+        const { cadencia, descanso, exercicios, repeticoes, series } = treino;
 
-    const query = 'INSERT INTO treino (cadencia, descanso, exercicios, repeticoes, series) VALUES (?, ?, ?, ?, ?)';
+        const insertQuery = `
+            INSERT INTO treino (cadencia, descanso, exercicios, repeticoes, series)
+            VALUES (?, ?, ?, ?, ?)
+        `;
 
-    const [createdTreino] = await connection.execute(query,[cadencia, descanso, exercicios, repeticoes, series]);
+        const [createdTreino] = await connection.execute(insertQuery, [cadencia, descanso, exercicios, repeticoes, series]);
 
-    return {insertId: createdTreino.insertId};
-    
+        return { insertId: createdTreino.insertId };
+    } catch (error) {
+        return { error: `Failed to create professor: ${error.message}` };
+    }
 };
+
 
 const deleteTreino = async (id) => {
     const removedTreino = await connection.execute('DELETE FROM treino WHERE treinoID = ?',[id]);
