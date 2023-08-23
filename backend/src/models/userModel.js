@@ -1,4 +1,4 @@
-const connection = require('./connection');
+const connection = require('../services/connection');
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 
@@ -22,7 +22,7 @@ const getUserId = async (id) => {
             return { error: "user not found" };
         }
 
-        return user[0]; // Return the first user (assuming ID is unique)
+        return user;
     } catch (error) {
         return { error: `Failed to retrieve user: ${error.message}`};
     }

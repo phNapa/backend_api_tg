@@ -1,21 +1,23 @@
 const express = require('express');
-const userRoutes = require('../routes/userRouter');
-const alunoRoutes = require('../routes/alunoRouter');
-const profRoutes = require('../routes/professorRouter');
-const aulaRoutes = require('../routes/aulaRouter');
-const treinoRoutes = require('../routes/treinoRouter');
-const exercicioRoutes = require('../routes/exercicioRouter');
-
 const app = express();
 
 app.use(express.json());
 
-//routes
-app.use(userRoutes);
-app.use(alunoRoutes);
-app.use(profRoutes);
-app.use(aulaRoutes);
-app.use(treinoRoutes);
-app.use(exercicioRoutes);
+const routes = [
+    require('../routes/userRouter'),
+    require('../routes/alunoRouter'),
+    require('../routes/professorRouter'),
+    require('../routes/aulaRouter'),
+    require('../routes/treinoRouter'),
+    require('../routes/exercicioRouter')
+];
+
+routes.forEach(route => {
+    app.use(route);
+});
+
+app.use((req, res, next) => {
+    res.status(404).json({ error: 'Rota não encontrada' });
+});
 
 module.exports = app;

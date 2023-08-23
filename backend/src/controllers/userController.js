@@ -1,15 +1,19 @@
-const connection = require('../models/connection');
+const connection = require('../services/connection');
 const userModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jsonwebtoken = require('jsonwebtoken');
 require('dotenv').config();
 
 const getAll = async (req, res) => {
+    try {
+        const users = await userModel.getAll();
 
-    const users = await userModel.getAll();
-
-    return res.status(200).json(users);
+        return res.status(200).json(users);
+    } catch (error) {
+        return res.status(500).json({ error: 'Failed to retrieve users' });
+    }
 };
+
 
 const getUserId = async (req, res) => {
     const {id} = req.params;

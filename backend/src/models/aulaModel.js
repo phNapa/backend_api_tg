@@ -1,4 +1,4 @@
-const connection = require('./connection');
+const connection = require('../services/connection');
 
 const getAll = async () => {
     try {

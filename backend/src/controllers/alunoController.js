@@ -1,5 +1,5 @@
-const connection = require('../models/connection');
-const { connect } = require('../models/connection');
+const connection = require('../services/connection');
+const { connect } = require('../services/connection');
 const alunoModel = require('../models/alunoModel');
 
 const getAll = async (req, res) => {
