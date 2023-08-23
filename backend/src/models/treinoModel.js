@@ -6,7 +6,7 @@ const getAll = async () => {
         const [treinos] = await connection.execute(query);
         return treinos;
     } catch (error) {
-        throw new Error(`Failed to retrieve treinos: ${error.message}`);
+        return { error: `Failed to retrieve treino: ${error.message}` };
     }
 };
 
@@ -16,7 +16,7 @@ const getTreinoId = async (id) => {
         const treino = await connection.execute('SELECT * FROM treino where treinoID = ?',[id]);
         return treino;
     } catch (error) {
-        throw new Error(`Failed to retrieve treino: ${error.message}`);
+        return { error: `Failed to retrieve treino: ${error.message}` };
     }
 };
 
@@ -33,26 +33,49 @@ const createNewTreino = async (treino) => {
 
         return { insertId: createdTreino.insertId };
     } catch (error) {
-        return { error: `Failed to create professor: ${error.message}` };
+        return { error: `Failed to create treino: ${error.message}` };
     }
 };
 
 
 const deleteTreino = async (id) => {
-    const removedTreino = await connection.execute('DELETE FROM treino WHERE treinoID = ?',[id]);
+    try {
+        const deleteQuery = 'DELETE FROM treino WHERE treinoID = ?';
+        const [removedTreino] = await connection.execute(deleteQuery, [id]);
 
-    return removedTreino;
-}
+        if (removedTreino.affectedRows === 0) {
+            return { error: 'Treino not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to delete treino: ${error.message}` };
+    }
+};
+
 
 const updateTreino = async (id, treino) => {
-    const {cadencia, descanso, exercicios, repeticoes, series} = treino;
-    
-    const query = 'UPDATE treino SET cadencia = ?, descanso = ?, exercicios = ?, repeticoes = ?, series = ? WHERE treinoID = ?';
+    try {
+        const { cadencia, descanso, exercicios, repeticoes, series } = treino;
 
-    const updatedTreino = await connection.execute(query,[cadencia, descanso, exercicios, repeticoes, series, id]);
+        const updateQuery = `
+            UPDATE treino
+            SET cadencia = ?, descanso = ?, exercicios = ?, repeticoes = ?, series = ?
+            WHERE treinoID = ?
+        `;
 
-    return updatedTreino;
-}
+        const [updatedTreino] = await connection.execute(updateQuery, [cadencia, descanso, exercicios, repeticoes, series, id]);
+
+        if (updatedTreino.affectedRows === 0) {
+            return { error: 'Treino not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to update treino: ${error.message}` };
+    }
+};
+
 
 module.exports = {
     getAll,

@@ -35,12 +35,12 @@ const createNewProf = async (prof) => {
             return { error: "User is not a professor" };
         }
 
-        // const checkIfExistsProfessorQuery = 'SELECT * FROM professor WHERE userID = ?';
-        // const [userAlreadyProfessor] = await connection.execute(checkIfExistsProfessorQuery, [userID]);
+        const checkIfExistsProfessorQuery = 'SELECT * FROM professor WHERE userID = ?';
+        const [userAlreadyProfessor] = await connection.execute(checkIfExistsProfessorQuery, [userID]);
 
-        // if (userAlreadyProfessor.length === 0 || userAlreadyProfessor[0].isProfessor !== 1) {
-        //     return { error: "User already a professor" };
-        // }
+        if (userAlreadyProfessor != '') {
+            return { error: "User already a professor" };
+        }
 
         const insertQuery = `
             INSERT INTO professor (certificacoes, dispoHorario, especialidade, experiencia, userID)
@@ -58,20 +58,43 @@ const createNewProf = async (prof) => {
 
 
 const deleteProf = async (id) => {
-    const removedProf = await connection.execute('DELETE FROM professor WHERE professorID = ?',[id]);
+    try {
+        const deleteQuery = 'DELETE FROM professor WHERE professorID = ?';
+        const [removedProfessor] = await connection.execute(deleteQuery, [id]);
 
-    return removedProf;
-}
+        if (removedProfessor.affectedRows === 0) {
+            return { error: 'Professor not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to delete professor: ${error.message}` };
+    }
+};
+
 
 const updateProf = async (id, prof) => {
-    const {certificacoes, dispoHorario, especialidade, experiencia} = prof;
-    
-    const query = 'UPDATE professor SET certificacoes = ?, dispoHorario = ?, especialidade = ?, experiencia =  ?, WHERE professorID = ?';
+    try {
+        const { certificacoes, dispoHorario, especialidade, experiencia } = prof;
 
-    const updatedProf = await connection.execute(query,[certificacoes, dispoHorario, especialidade, experiencia, id]);
+        const updateQuery = `
+            UPDATE professor
+            SET certificacoes = ?, dispoHorario = ?, especialidade = ?, experiencia = ?
+            WHERE professorID = ?
+        `;
 
-    return updatedProf;
-}
+        const [updatedProf] = await connection.execute(updateQuery, [certificacoes, dispoHorario, especialidade, experiencia, id]);
+
+        if (updatedProf.affectedRows === 0) {
+            return { error: 'Professor not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to update professor: ${error.message}` };
+    }
+};
+
 
 module.exports = {
     getAll,

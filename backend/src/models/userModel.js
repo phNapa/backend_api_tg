@@ -8,7 +8,7 @@ const getAll = async () => {
         const [users] = await connection.execute(query);
         return users;
     } catch (error) {
-        throw new Error(`Failed to retrieve users: ${error.message}`);
+        return { error: `Failed to retrieve user: ${error.message}`};
     }
 };
 
@@ -19,12 +19,12 @@ const getUserId = async (id) => {
         const [user] = await connection.execute(query, [id]);
 
         if (user.length === 0) {
-            throw new Error('User not found');
+            return { error: "user not found" };
         }
 
         return user[0]; // Return the first user (assuming ID is unique)
     } catch (error) {
-        throw new Error(`Failed to retrieve user: ${error.message}`);
+        return { error: `Failed to retrieve user: ${error.message}`};
     }
 };
 
@@ -68,26 +68,49 @@ const createNewUser = async (user) => {
             insertIdCredentials: createdUserCredentials.insertId
         };
     } catch (error) {
-        return { error: `Failed to create professor: ${error.message}` };
+        return { error: `Failed to create usuario: ${error.message}` };
     }
 };
 
 
 const deleteUser = async (id) => {
-    const removedUser = await connection.execute('DELETE FROM usuario WHERE userID = ?',[id]);
+    try {
+        const deleteQuery = 'DELETE FROM usuario WHERE userID = ?';
+        const [removedUser] = await connection.execute(deleteQuery, [id]);
 
-    return removedUser;
-}
+        if (removedUser.affectedRows === 0) {
+            return { error: 'User not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to delete user: ${error.message}` };
+    }
+};
+
 
 const updateUser = async (id, user) => {
-    const {cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor} = user;
-    
-    const query = 'UPDATE usuario SET CPF = ?, dataNasc = ?, genero = ?, name = ?, contato = ?, endereco = ?, cidade = ?, isProfessor = ? WHERE userID = ?';
+    try {
+        const { cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor } = user;
 
-    const updatedUser = await connection.execute(query,[cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, id]);
+        const updateQuery = `
+            UPDATE usuario
+            SET CPF = ?, dataNasc = ?, genero = ?, name = ?, contato = ?, endereco = ?, cidade = ?, isProfessor = ?
+            WHERE userID = ?
+        `;
 
-    return updatedUser;
-}
+        const [updatedUser] = await connection.execute(updateQuery, [cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, id]);
+
+        if (updatedUser.affectedRows === 0) {
+            return { error: 'User not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to update user: ${error.message}` };
+    }
+};
+
 
 module.exports = {
     getAll,

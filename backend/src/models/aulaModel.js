@@ -1,41 +1,87 @@
 const connection = require('./connection');
 
 const getAll = async () => {
-    const [aula] = await connection.execute('SELECT * FROM aula');
-    return aula;
+    try {
+        const query = 'SELECT * FROM aula';
+        const [aulas] = await connection.execute(query);
+        return aulas;
+    } catch (error) {
+        throw new Error(`Failed to retrieve aulas: ${error.message}`);
+    }
 };
 
+
 const getAulaId = async (id) => {
-    const aula = await connection.execute('SELECT * FROM aula WHERE aulaID = ?',[id]);
-    return aula;
+    try{
+        const aula = await connection.execute('SELECT * FROM aula WHERE aulaID = ?',[id]);
+        return aula;
+    } catch (error) {
+        return { error: `Failed to retrieve exercicio: ${error.message}` };
+    }
 };
 
 const createNewAula = async (aula) => {
-    const {dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo} = aula;
+    try {
+        const { dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo } = aula;
 
-    const query = 'INSERT INTO aula (dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const insertQuery = `
+            INSERT INTO aula (dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `;
 
-    const [createdAula] = await connection.execute(query,[dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo]);
+        const [createdAula] = await connection.execute(
+            insertQuery,
+            [dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo]
+        );
 
-    return {insertId: createdAula.insertId};
-    
+        return { insertId: createdAula.insertId };
+    } catch (error) {
+        throw new Error(`Failed to create aula: ${error.message}`);
+    }
 };
 
-const deleteAula = async (id) => {
-    const removedAula = await connection.execute('DELETE FROM aula WHERE aulaID = ?',[id]);
 
-    return removedAula;
-}
+const deleteAula = async (id) => {
+    try {
+        const deleteQuery = 'DELETE FROM aula WHERE aulaID = ?';
+        const [removedAula] = await connection.execute(deleteQuery, [id]);
+
+        if (removedAula.affectedRows === 0) {
+            return { error: 'Aula not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to delete aula: ${error.message}` };
+    }
+};
+
 
 const updateAula = async (id, aula) => {
-    const {dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo} = aula;
-    
-    const query = 'UPDATE aula SET dataAula = ?, dificuldades = ?, duracao = ?, horario =  ?, localo = ?, pesoAtual = ?, titulo = ? WHERE aulaID = ?';
+    try {
+        const { dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo } = aula;
 
-    const updatedAula = await connection.execute(query,[dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo, id]);
+        const updateQuery = `
+            UPDATE aula
+            SET dataAula = ?, dificuldades = ?, duracao = ?, horario = ?, localo = ?, pesoAtual = ?, titulo = ?
+            WHERE aulaID = ?
+        `;
 
-    return updatedAula;
-}
+        const [updatedAula] = await connection.execute(
+            updateQuery,
+            [dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo, id]
+        );
+
+        if (updatedAula.affectedRows === 0) {
+            return { error: 'Aula not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to update aula: ${error.message}` };
+    }
+};
+
 
 module.exports = {
     getAll,
