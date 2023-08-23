@@ -12,11 +12,11 @@ Toda configuração de rotas e manipulação de dados no banco
     |- controllers/
     |- middlewares/
     |- models/
-        |-connection.js
     |- routes/
     |- services/
         |- app.js/
         |- server.js/
+        |-connection.js
 ```
 ## Instalação
 
