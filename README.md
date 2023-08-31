@@ -20,16 +20,25 @@ Toda configuração de rotas e manipulação de dados no banco
 ```
 ## Instalação
 
-Instale nodeJS na sua máquina e as seguintes depedências
+Instale nodeJS na sua máquina e instale as depedências com o comando:
+```bash
+  npm install
+```
+
+As depedências da aplicação são as seguintes:
 
 ```bash
-  npm install express\
-  npm install mysql2 \
-  npm install nodemon\
-  npm install dotenv \
-  npm install bcrypt \
-  npm install jsonwebtoken
+  express\
+  mysql2 \
+  nodemon\
+  dotenv \
+  bcrypt \
+  jsonwebtoken
 ```
+
+## Configuração
+
+Configure as variáveis de ambiente seguindo o modelo ".env.example", criando no mesmo diretório o arquivo ".env" e preenchendo com os dados corretos de banco
     
 ## Deploy
 
