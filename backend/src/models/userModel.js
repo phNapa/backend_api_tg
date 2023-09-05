@@ -42,9 +42,9 @@ const authenticate = async (userCredentials) => {
 
 }
 
-const createNewUser = async (user) => {
+const createUserCredentials = async (user) => {
     try {
-        const { email, senha, cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor } = user;
+        const { email, senha} = user;
 
         const checkIfExistsQuery = 'SELECT * FROM user_credentials WHERE email = ?';
         const [existingUser] = await connection.execute(checkIfExistsQuery, [email]);
@@ -53,19 +53,30 @@ const createNewUser = async (user) => {
             return { error: "User already exists" };
         }
 
-        const insertUserQuery = `
-            INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-        const [createdUser] = await connection.execute(insertUserQuery, [cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null']);
-
-        const insertUserCredentialsQuery = 'INSERT INTO user_credentials (email, senha, userID) VALUES (?, ?, ?)';
+        const insertUserCredentialsQuery = 'INSERT INTO user_credentials (email, senha) VALUES (?, ?)';
         const hashedPassword = await bcrypt.hash(senha, 10);
-        const [createdUserCredentials] = await connection.execute(insertUserCredentialsQuery, [email, hashedPassword, createdUser.insertId]);
+        const [createdUserCredentials] = await connection.execute(insertUserCredentialsQuery, [email, hashedPassword]);
 
         return {
-            insertId: createdUser.insertId,
             insertIdCredentials: createdUserCredentials.insertId
+        };
+    } catch (error) {
+        return { error: `Failed to create usuario: ${error.message}` };
+    }
+};
+
+const createNewUser = async (user) => {
+    try {
+        const {cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, userCredentialsID} = user;
+
+        const insertUserQuery = `
+            INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil, userCredentialsID)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        const [createdUser] = await connection.execute(insertUserQuery, [cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null', userCredentialsID]);
+
+        return {
+            insertId: createdUser.insertId
         };
     } catch (error) {
         return { error: `Failed to create usuario: ${error.message}` };
@@ -119,4 +130,5 @@ module.exports = {
     deleteUser,
     updateUser,
     authenticate,
+    createUserCredentials,
 };

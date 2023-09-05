@@ -53,6 +53,12 @@ const authenticate = async (req, res) => {
     return res.status(200).json(token, authenticateParams, expiracaoToken);
 }
 
+const createUserCredentials = async (req, res) => {
+    const createdUserCredentials = await userModel.createUserCredentials(req.body);
+
+    return res.status(201).json(createdUserCredentials);
+};
+
 const createNewUser = async (req, res) => {
     const createdUser = await userModel.createNewUser(req.body);
 
@@ -80,4 +86,5 @@ module.exports = {
     deleteUser,
     updateUser,
     authenticate,
+    createUserCredentials,
 };

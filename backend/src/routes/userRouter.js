@@ -13,7 +13,9 @@ router.get('/users/:id', jwtMiddleware.verifyJWT, userController.getUserId);
 
 router.post('/auth/login', userController.authenticate);
 
-router.post('/users', userMiddleware.validateBody, userController.createNewUser);
+router.post('/user', userController.createUserCredentials);
+
+router.post('/userDetails', jwtMiddleware.verifyJWT, userController.createNewUser);
 
 router.delete('/users/:id', jwtMiddleware.verifyJWT, userController.deleteUser);
 
