@@ -46,11 +46,16 @@ const authenticate = async (req, res) => {
         }
     );
     
-      const horarioAtual = new Date();
-    
-      const expiracaoToken = new Date(horarioAtual.getTime() + 8 * 60 * 60 * 1000);
+    const horarioAtual = new Date();
 
-    return res.status(200).json(token, authenticateParams, expiracaoToken);
+    const expiracaoToken = new Date(horarioAtual.getTime() + 8 * 60 * 60 * 1000);
+
+    const userID = user[0][0]['id']
+
+    const checkProfessor = await connection.execute('SELECT isProfessor FROM usuario WHERE userCredentialsID = ?',[userID]);
+    const isProfessor = checkProfessor[0][0]['isProfessor'];
+    
+    return res.status(200).json({token, userID, isProfessor, expiracaoToken});
 }
 
 const createUserCredentials = async (req, res) => {
