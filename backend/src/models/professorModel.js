@@ -8,7 +8,9 @@ const getAll = async () => {
             LEFT JOIN usuario u ON u.userID = p.userID
         `;
         const [professors] = await connection.execute(query);
-        return professors;
+        return {
+            data: professors
+        };
     } catch (error) {
         return { error: `Failed to retrieve professor: ${error.message}` };
     }
@@ -43,11 +45,11 @@ const createNewProf = async (prof) => {
         }
 
         const insertQuery = `
-            INSERT INTO professor (certificacoes, dispoHorario, especialidade, experiencia, userID)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO professor (certificacoes, dispoHorario, especialidade, experiencia, userID, notaMedia)
+            VALUES (?, ?, ?, ?, ?, ?)
         `;
 
-        const [createdProfessor] = await connection.execute(insertQuery, [certificacoes, dispoHorario, especialidade, experiencia, userID]);
+        const [createdProfessor] = await connection.execute(insertQuery, [certificacoes, dispoHorario, especialidade, experiencia, userID, 0]);
 
         return { insertId: createdProfessor.insertId };
     } catch (error) {
