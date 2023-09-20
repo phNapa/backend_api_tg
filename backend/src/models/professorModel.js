@@ -3,7 +3,7 @@ const connection = require('../services/connection');
 const getAll = async () => {
     try {
         const query = `
-            SELECT u.name, p.*
+            SELECT u.name, u.contato, u.cidade, p.*
             FROM professor p
             LEFT JOIN usuario u ON u.userID = p.userID
         `;
@@ -26,6 +26,23 @@ const getProfId = async (id) => {
     }
 };
 
+const getProfCidade = async (cidade) => {
+    try {
+        const query = `
+            SELECT u.name, u.contato, u.cidade, p.*
+            FROM professor p
+            LEFT JOIN usuario u ON u.userID = p.userID
+            WHERE u.cidade = "?"
+        `;
+        const [professors] = await connection.execute(query, [cidade]);
+        return {
+            data: professors
+        };
+    } catch (error) {
+        return { error: `Failed to retrieve professor: ${error.message}` };
+    }
+};
+
 const createNewProf = async (prof) => {
     try {
         const { certificacoes, dispoHorario, especialidade, experiencia, userID } = prof;
@@ -39,7 +56,7 @@ const createNewProf = async (prof) => {
 
         const checkIfExistsProfessorQuery = 'SELECT * FROM professor WHERE userID = ?';
         const [userAlreadyProfessor] = await connection.execute(checkIfExistsProfessorQuery, [userID]);
-
+        
         if (userAlreadyProfessor != '') {
             return { error: "User already a professor" };
         }
@@ -104,4 +121,5 @@ module.exports = {
     createNewProf,
     deleteProf,
     updateProf,
+    getProfCidade,
 };

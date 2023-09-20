@@ -15,6 +15,12 @@ const getProfId = async (req, res) => {
     return res.status(200).json(prof[0]);
 };
 
+const getProfCidade = async (req, res) => {
+    const {cidade} = req.params;
+    const prof = await professorModel.getProfId(id);
+    return res.status(200).json(prof[0]);
+};
+
 const createNewProf = async (req, res) => {
     const createdProf = await professorModel.createNewProf(req.body);
 
@@ -41,4 +47,5 @@ module.exports = {
     createNewProf,
     deleteProf,
     updateProf,
+    getProfCidade,
 };
