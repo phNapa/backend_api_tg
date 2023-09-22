@@ -10,6 +10,8 @@ router.get('/prof', jwtMiddleware.verifyJWT, professorController.getAll);
 
 router.get('/prof/:id', jwtMiddleware.verifyJWT, professorController.getProfId);
 
+router.get('/prof/user/:id', jwtMiddleware.verifyJWT, professorController.getUserProf);
+
 router.get('/prof/cidade/:cidade', jwtMiddleware.verifyJWT, professorController.getProfCidade);
 
 router.post('/prof', professorMiddleware.validateBody, professorController.createNewProf);

@@ -10,6 +10,8 @@ router.get('/aula', jwtMiddleware.verifyJWT, aulaController.getAll);
 
 router.get('/aula/:id', jwtMiddleware.verifyJWT, aulaController.getAulaId);
 
+router.get('/aula/user/:id', jwtMiddleware.verifyJWT, aulaController.getAulaUser);
+
 router.post('/aula', jwtMiddleware.verifyJWT, aulaMiddleware.validateBody, aulaController.createNewAula);
 
 router.delete('/aula/:id', jwtMiddleware.verifyJWT, aulaController.deleteAula);

@@ -26,6 +26,15 @@ const getProfId = async (id) => {
     }
 };
 
+const getUserProf = async (id) => {
+    try{
+    const prof = await connection.execute('SELECT DISTINCT p.* FROM professor p inner JOIN aula a on p.professorID=a.professorID and a.userID = ?;',[id]);
+    return prof;
+    } catch (error) {
+        return { error: `Failed to retrieve professor: ${error.message}` };
+    }
+};
+
 const getProfCidade = async (cidade) => {
     try {
         const query = 'SELECT u.name, u.contato, u.cidade, p.* FROM professor p LEFT JOIN usuario u ON u.userID = p.userID WHERE u.cidade = ?';
@@ -117,4 +126,5 @@ module.exports = {
     deleteProf,
     updateProf,
     getProfCidade,
+    getUserProf,
 };

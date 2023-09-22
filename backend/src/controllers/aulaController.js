@@ -15,6 +15,12 @@ const getAulaId = async (req, res) => {
     return res.status(200).json(aula[0]);
 };
 
+const getAulaUser = async (req, res) => {
+    const {id} = req.params;
+    const aula = await aulaModel.getAulaUser(id);
+    return res.status(200).json(aula);
+};
+
 const createNewAula = async (req, res) => {
     const createdAula = await aulaModel.createNewAula(req.body);
 
@@ -41,4 +47,5 @@ module.exports = {
     createNewAula,
     deleteAula,
     updateAula,
+    getAulaUser,
 };

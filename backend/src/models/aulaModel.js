@@ -20,6 +20,19 @@ const getAulaId = async (id) => {
     }
 };
 
+const getAulaUser = async (id) => {
+    try {
+        const query = 'SELECT * FROM aula WHERE userID = ? ORDER BY aulaID DESC';
+        const [aulas] = await connection.execute(query, [id]);
+        return {
+            data: aulas
+        };
+    } catch (error) {
+        return { error: `Failed to retrieve aula: ${error.message}` };
+    }
+};
+
+
 const createNewAula = async (aula) => {
     try {
         const { dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo } = aula;
@@ -89,4 +102,5 @@ module.exports = {
     createNewAula,
     deleteAula,
     updateAula,
+    getAulaUser,
 };
