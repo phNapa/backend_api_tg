@@ -17,8 +17,8 @@ const getProfId = async (req, res) => {
 
 const getProfCidade = async (req, res) => {
     const {cidade} = req.params;
-    const prof = await professorModel.getProfId(id);
-    return res.status(200).json(prof[0]);
+    const prof = await professorModel.getProfCidade(cidade);
+    return res.status(200).json(prof);
 };
 
 const createNewProf = async (req, res) => {

@@ -28,12 +28,7 @@ const getProfId = async (id) => {
 
 const getProfCidade = async (cidade) => {
     try {
-        const query = `
-            SELECT u.name, u.contato, u.cidade, p.*
-            FROM professor p
-            LEFT JOIN usuario u ON u.userID = p.userID
-            WHERE u.cidade = "?"
-        `;
+        const query = 'SELECT u.name, u.contato, u.cidade, p.* FROM professor p LEFT JOIN usuario u ON u.userID = p.userID WHERE u.cidade = ?';
         const [professors] = await connection.execute(query, [cidade]);
         return {
             data: professors
