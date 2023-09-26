@@ -22,7 +22,7 @@ const getAulaId = async (id) => {
 
 const getAulaUser = async (id) => {
     try {
-        const query = 'SELECT * FROM aula WHERE userID = ? ORDER BY aulaID DESC';
+        const query = 'SELECT * FROM aula WHERE alunoID = ? ORDER BY aulaID DESC';
         const [aulas] = await connection.execute(query, [id]);
         return {
             data: aulas
