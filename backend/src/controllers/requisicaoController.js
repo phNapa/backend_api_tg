@@ -4,15 +4,15 @@ const requisicaoModel = require('../models/requisicaoModel');
 
 
 const getAllFromProfessor = async (req, res) => {
-    const {professorID} = req.params;
-    const requisicao = await requisicaoModel.getAllFromProfessor(professorID);
-    return res.status(200).json(requisicao[0]);
+    const {id} = req.params;
+    const requisicao = await requisicaoModel.getAllFromProfessor(id);
+    return res.status(200).json(requisicao);
 };
 
 const getAllFromAluno = async (req, res) => {
-    const {alunoID} = req.params;
-    const requisicao = await requisicaoModel.getAllFromAluno(alunoID);
-    return res.status(200).json(requisicao[0]);
+    const {id} = req.params;
+    const requisicao = await requisicaoModel.getAllFromAluno(id);
+    return res.status(200).json(requisicao);
 };
 
 const createRequisicao = async (req, res) => {

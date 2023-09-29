@@ -1,20 +1,24 @@
 const connection = require('../services/connection');
 
-const getAllFromProfessor = async (professorID) => {
+const getAllFromProfessor = async (id) => {
     try {
         const query = 'SELECT * FROM requisicao WHERE professorID = ?';
-        const [requisicao] = await connection.execute(query, [professorID]);
-        return requisicao;
+        const [requisicao] = await connection.execute(query,[id]);
+        return {
+            data: requisicao
+        };
     } catch (error) {
         throw new Error(`Failed to retrieve aulas: ${error.message}`);
     }
 };
 
-const getAllFromAluno = async (alunoID) => {
+const getAllFromAluno = async (id) => {
     try {
         const query = 'SELECT * FROM requisicao WHERE alunoID = ?';
-        const [requisicao] = await connection.execute(query, [alunoID]);
-        return requisicao;
+        const [requisicao] = await connection.execute(query, [id]);
+        return {
+            data: requisicao
+        };
     } catch (error) {
         throw new Error(`Failed to retrieve aulas: ${error.message}`);
     }

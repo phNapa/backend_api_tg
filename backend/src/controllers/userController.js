@@ -54,8 +54,16 @@ const authenticate = async (req, res) => {
 
     const checkProfessor = await connection.execute('SELECT isProfessor FROM usuario WHERE userCredentialsID = ?',[userID]);
     const isProfessor = checkProfessor[0][0]['isProfessor'];
-    
-    return res.status(200).json({token, userID, isProfessor, expiracaoToken});
+
+    if (isProfessor == 1){
+        const getProfessorId = await connection.execute('SELECT professorID FROM professor WHERE userID = ?',[userID]);
+        const professorID = getProfessorId[0][0]['professorID'];
+        return res.status(200).json({token, userID, isProfessor, professorID, expiracaoToken});
+    } else {
+        const getAlunoId = await connection.execute('SELECT alunoID FROM aluno WHERE userID = ?',[userID]);
+        const alunoID = getAlunoId[0][0]['alunoID'];
+        return res.status(200).json({token, userID, isProfessor, alunoID, expiracaoToken});
+    }
 }
 
 const createUserCredentials = async (req, res) => {

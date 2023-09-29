@@ -14,11 +14,21 @@ const getAll = async () => {
     }
 };
 
-
 const getAlunoId = async (id) => {
     try{
         const aluno = await connection.execute('SELECT u.name, a.* FROM aluno a left join usuario u on u.userID = a.userID WHERE a.alunoID = ?',[id]);
         return aluno;
+    } catch (error) {
+        return { error: `Failed to retrieve exercicio: ${error.message}` };
+    }
+};
+
+const getProfAlunos = async (id) => {
+    try{
+        const [aluno] = await connection.execute('SELECT DISTINCT u.* FROM aluno al LEFT join aula au on au.alunoID=al.alunoID LEFT join professor pr on pr.professorID = au.professorID LEFT join usuario u on u.userID = au.alunoID WHERE au.professorID = ?;',[id]);
+        return {
+            data: aluno
+        };
     } catch (error) {
         return { error: `Failed to retrieve exercicio: ${error.message}` };
     }
@@ -102,4 +112,5 @@ module.exports = {
     createNewAluno,
     deleteAluno,
     updateAluno,
+    getProfAlunos,
 };

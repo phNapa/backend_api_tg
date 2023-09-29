@@ -15,6 +15,12 @@ const getAlunoId = async (req, res) => {
     return res.status(200).json(aluno[0]);
 };
 
+const getProfAlunos = async (req, res) => {
+    const {id} = req.params;
+    const alunos = await alunoModel.getProfAlunos(id);
+    return res.status(200).json(alunos);
+};
+
 const createNewAluno = async (req, res) => {
     const createdAluno = await alunoModel.createNewAluno(req.body);
 
@@ -41,4 +47,5 @@ module.exports = {
     createNewAluno,
     deleteAluno,
     updateAluno,
+    getProfAlunos,
 };
