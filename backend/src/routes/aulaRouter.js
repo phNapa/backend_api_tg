@@ -18,4 +18,6 @@ router.delete('/aula/:id', jwtMiddleware.verifyJWT, aulaController.deleteAula);
 
 router.put('/aula/:id', jwtMiddleware.verifyJWT, aulaController.updateAula);
 
+router.put('/aula/finalizar/:id', jwtMiddleware.verifyJWT, aulaController.finalizarAula);
+
 module.exports = router;

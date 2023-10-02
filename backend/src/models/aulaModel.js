@@ -95,6 +95,31 @@ const updateAula = async (id, aula) => {
     }
 };
 
+const finalizarAula = async (id, aula) => {
+    try {
+        const { dificuldades, duracao, finalizado, notaAula, notaProf, pesoAtual } = aula;
+
+        const updateQuery = `
+            UPDATE aula
+            SET dificuldades = ?, duracao = ?, finalizado = ?, notaAula = ?, notaProf = ?, pesoAtual = ?
+            WHERE aulaID = ?
+        `;
+
+        const [finalizadaAula] = await connection.execute(
+            updateQuery,
+            [dificuldades, duracao, finalizado, notaAula, notaProf, pesoAtual, id]
+        );
+
+        if (finalizadaAula.affectedRows === 0) {
+            return { error: 'Aula not found' };
+        }
+
+        return { success: true };
+    } catch (error) {
+        return { error: `Failed to update aula: ${error.message}` };
+    }
+};
+
 
 module.exports = {
     getAll,
@@ -103,4 +128,5 @@ module.exports = {
     deleteAula,
     updateAula,
     getAulaUser,
+    finalizarAula,
 };

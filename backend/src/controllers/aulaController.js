@@ -41,6 +41,13 @@ const updateAula = async (req, res) => {
     return res.status(204).json();
 };
 
+const finalizarAula = async (req, res) => {
+    const {id} = req.params;
+
+    await aulaModel.finalizarAula(id,req.body);
+    return res.status(204).json();
+};
+
 module.exports = {
     getAll,
     getAulaId,
@@ -48,4 +55,5 @@ module.exports = {
     deleteAula,
     updateAula,
     getAulaUser,
+    finalizarAula,
 };
