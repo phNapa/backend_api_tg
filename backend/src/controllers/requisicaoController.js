@@ -28,10 +28,10 @@ const deleteRequisicao = async (req, res) => {
     return res.status(204).json();
 };
 
-const updateAula = async (req, res) => {
+const putAceitarRequisicao = async (req, res) => {
     const {id} = req.params;
 
-    await aulaModel.updateAula(id,req.body);
+    await requisicaoModel.putAceitarRequisicao(id);
     return res.status(204).json();
 };
 
@@ -40,4 +40,5 @@ module.exports = {
     getAllFromAluno,
     createRequisicao,
     deleteRequisicao,
+    putAceitarRequisicao,
 };

@@ -2,13 +2,13 @@ const connection = require('../services/connection');
 
 const getAllFromProfessor = async (id) => {
     try {
-        const query = 'SELECT * FROM requisicao WHERE professorID = ?';
+        const query = 'SELECT re.*, u.name, u.contato, u.cidade FROM requisicao re LEFT JOIN aluno al on al.alunoID=re.alunoID LEFT JOIN usuario u on u.userID=al.userID WHERE re.professorID = ? order by id desc';
         const [requisicao] = await connection.execute(query,[id]);
         return {
             data: requisicao
         };
     } catch (error) {
-        throw new Error(`Failed to retrieve aulas: ${error.message}`);
+        throw new Error(`Failed to retrieve: ${error.message}`);
     }
 };
 
@@ -20,7 +20,7 @@ const getAllFromAluno = async (id) => {
             data: requisicao
         };
     } catch (error) {
-        throw new Error(`Failed to retrieve aulas: ${error.message}`);
+        throw new Error(`Failed to retrieve: ${error.message}`);
     }
 };
 
@@ -40,7 +40,7 @@ const createRequisicao = async (req) => {
 
         return { insertId: createdRequisicao.insertId };
     } catch (error) {
-        throw new Error(`Failed to create aula: ${error.message}`);
+        throw new Error(`Failed to create: ${error.message}`);
     }
 };
 
@@ -56,33 +56,32 @@ const deleteRequisicao = async (id) => {
 
         return { success: true };
     } catch (error) {
-        return { error: `Failed to delete aula: ${error.message}` };
+        return { error: `Failed to delete: ${error.message}` };
     }
 };
 
 
-const updateRequisicao = async (id, aula) => {
+const putAceitarRequisicao = async (id) => {
     try {
-        const { dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo } = aula;
 
         const updateQuery = `
-            UPDATE aula
-            SET dataAula = ?, dificuldades = ?, duracao = ?, horario = ?, localo = ?, pesoAtual = ?, titulo = ?
-            WHERE aulaID = ?
+            UPDATE requisicao
+            SET aceito = 1
+            WHERE id = ?
         `;
 
-        const [updatedAula] = await connection.execute(
+        const [aceitarReq] = await connection.execute(
             updateQuery,
-            [dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo, id]
+            [id]
         );
 
-        if (updatedAula.affectedRows === 0) {
-            return { error: 'Aula not found' };
+        if (aceitarReq.affectedRows === 0) {
+            return { error: 'Requisicao not found' };
         }
 
         return { success: true };
     } catch (error) {
-        return { error: `Failed to update aula: ${error.message}` };
+        return { error: `Failed to update: ${error.message}` };
     }
 };
 
@@ -92,4 +91,5 @@ module.exports = {
     getAllFromAluno,
     createRequisicao,
     deleteRequisicao,
+    putAceitarRequisicao,
 };

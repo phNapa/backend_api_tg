@@ -14,4 +14,6 @@ router.post('/requisicao', jwtMiddleware.verifyJWT, requisicaoController.createR
 
 router.delete('/requisicao/:id', jwtMiddleware.verifyJWT, requisicaoController.deleteRequisicao);
 
+router.put('/requisicao/aceitar/:id', jwtMiddleware.verifyJWT, requisicaoController.putAceitarRequisicao);
+
 module.exports = router;
