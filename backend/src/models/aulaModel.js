@@ -35,16 +35,16 @@ const getAulaUser = async (id) => {
 
 const createNewAula = async (aula) => {
     try {
-        const { dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo } = aula;
+        const { treinoID, titulo, alunoID, professorID, finalizado } = aula;
 
         const insertQuery = `
-            INSERT INTO aula (dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO aula (treinoID, titulo, alunoID, professorID, finalizado)
+            VALUES (?, ?, ?, ?, ?)
         `;
 
         const [createdAula] = await connection.execute(
             insertQuery,
-            [dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo]
+            [treinoID, titulo, alunoID, professorID, finalizado]
         );
 
         return { insertId: createdAula.insertId };

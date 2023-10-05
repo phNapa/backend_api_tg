@@ -2,7 +2,7 @@ const connection = require('../services/connection');
 
 const getAll = async () => {
     try {
-        const query = 'SELECT * FROM exercicios';
+        const query = 'SELECT * FROM exercicios order by nome asc';
         const [exercicios] = await connection.execute(query);
         return exercicios;
     } catch (error) {

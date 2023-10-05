@@ -22,14 +22,14 @@ const getTreinoId = async (id) => {
 
 const createNewTreino = async (treino) => {
     try {
-        const { cadencia, descanso, exercicios, repeticoes, series } = treino;
+        const { descanso, exercicios, repeticoes, series } = treino;
 
         const insertQuery = `
-            INSERT INTO treino (cadencia, descanso, exercicios, repeticoes, series)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO treino (descanso, exercicios, repeticoes, series)
+            VALUES (?, ?, ?, ?)
         `;
 
-        const [createdTreino] = await connection.execute(insertQuery, [cadencia, descanso, exercicios, repeticoes, series]);
+        const [createdTreino] = await connection.execute(insertQuery, [descanso, exercicios, repeticoes, series]);
 
         return { insertId: createdTreino.insertId };
     } catch (error) {

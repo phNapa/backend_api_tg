@@ -3,7 +3,6 @@ const validateBody = (req, res, next) => {
 
     const requiredFields = [
         { field: 'exercicios', message: 'Exercicios é obrigatório' },
-        { field: 'cadencia', message: 'Campo cadencia de Experiência é obrigatório' },
         { field: 'series', message: 'Campo series é obrigatório' },
         { field: 'repeticoes', message: 'Campo repeticoes é obrigatório' },
         { field: 'descanso', message: 'Campo descanso é obrigatório' },
