@@ -53,7 +53,6 @@ const createNewProf = async (prof) => {
 
         const checkIsProfessorQuery = 'SELECT isProfessor FROM usuario WHERE userID = ?';
         const [userIsProfessor] = await connection.execute(checkIsProfessorQuery, [userID]);
-
         if (userIsProfessor.length === 0 || userIsProfessor[0].isProfessor !== 1) {
             return { error: "User is not a professor" };
         }
@@ -66,12 +65,11 @@ const createNewProf = async (prof) => {
         }
 
         const insertQuery = `
-            INSERT INTO professor (certificacoes, dispoHorario, especialidade, experiencia, userID, notaMedia)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO professor (certificacoes, dispoHorario, especialidade, experiencia, userID)
+            VALUES (?, ?, ?, ?, ?)
         `;
 
-        const [createdProfessor] = await connection.execute(insertQuery, [certificacoes, dispoHorario, especialidade, experiencia, userID, 0]);
-
+        const [createdProfessor] = await connection.execute(insertQuery, [certificacoes, dispoHorario, especialidade, experiencia, userID]);
         return { insertId: createdProfessor.insertId };
     } catch (error) {
         return { error: `Failed to create professor: ${error.message}` };

@@ -70,10 +70,10 @@ const createNewUser = async (user) => {
         const {cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, userCredentialsID} = user;
 
         const insertUserQuery = `
-            INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor, fotoPerfil, userCredentialsID)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO usuario (CPF, dataNasc, genero, name, contato, endereco, cidade, isProfessor,  userCredentialsID)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        const [createdUser] = await connection.execute(insertUserQuery, [cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, 'null', userCredentialsID]);
+        const [createdUser] = await connection.execute(insertUserQuery, [cpf, dataNasc, genero, name, contato, endereco, cidade, isProfessor, userCredentialsID]);
 
         return {
             insertId: createdUser.insertId

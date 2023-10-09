@@ -72,17 +72,17 @@ const deleteAula = async (id) => {
 
 const updateAula = async (id, aula) => {
     try {
-        const { dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo } = aula;
+        const { dataAula, dificuldades, duracao, horario, local, pesoAtual, titulo } = aula;
 
         const updateQuery = `
             UPDATE aula
-            SET dataAula = ?, dificuldades = ?, duracao = ?, horario = ?, localo = ?, pesoAtual = ?, titulo = ?
+            SET dataAula = ?, dificuldades = ?, duracao = ?, horario = ?, local = ?, pesoAtual = ?, titulo = ?
             WHERE aulaID = ?
         `;
 
         const [updatedAula] = await connection.execute(
             updateQuery,
-            [dataAula, dificuldades, duracao, horario, localo, pesoAtual, titulo, id]
+            [dataAula, dificuldades, duracao, horario, local, pesoAtual, titulo, id]
         );
 
         if (updatedAula.affectedRows === 0) {
