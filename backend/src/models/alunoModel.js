@@ -36,7 +36,7 @@ const getProfAlunos = async (id) => {
 
 const createNewAluno = async (aluno) => {
     try {
-        const { altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID } = aluno;
+        const { altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID, imc } = aluno;
 
         const checkIsProfessorQuery = 'SELECT isProfessor FROM usuario WHERE userID = ?';
         const [checkIsProfessorResult] = await connection.execute(checkIsProfessorQuery, [userID]);
@@ -47,13 +47,13 @@ const createNewAluno = async (aluno) => {
             return { message: "User is a professor" };
         } else {
             const insertQuery = `
-                INSERT INTO aluno (altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO aluno (altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID, imc)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             `;
 
             const [createdAluno] = await connection.execute(
                 insertQuery,
-                [altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID]
+                [altura, nivelExperiencia, objetivos, pesoOrigem, prefHorario, restrMedicas, userID, imc]
             );
 
             return { insertId: createdAluno.insertId };
