@@ -28,7 +28,7 @@ const getProfId = async (id) => {
 
 const getUserProf = async (id) => {
     try{
-    const prof = await connection.execute('SELECT DISTINCT p.* FROM professor p inner JOIN aula a on p.professorID=a.professorID and a.userID = ?;',[id]);
+    const prof = await connection.execute('SELECT DISTINCT p.* FROM professor p inner JOIN aula a on p.professorID=a.professorID and a.alunoID = ?;',[id]);
     return prof;
     } catch (error) {
         return { error: `Failed to retrieve professor: ${error.message}` };
