@@ -10,7 +10,8 @@ const routes = [
     require('../routes/aulaRouter'),
     require('../routes/treinoRouter'),
     require('../routes/exercicioRouter'),
-    require('../routes/requisicaoRouter')
+    require('../routes/requisicaoRouter'),
+    require('../routes/acompanhamentoRouter')
 ];
 
 routes.forEach(route => {
