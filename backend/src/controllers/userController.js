@@ -40,7 +40,7 @@ const authenticate = async (req, res) => {
           userID: user[0][0]['userID'],
           email: authenticateParams['email']
         },
-        process.env.ACCESS_TOKEN_SECRET.toString(),
+        process.env.ACCESS_TOKEN_SECRET,
         {
           expiresIn: "8h",
         }
